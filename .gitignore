@@ -1,0 +1,10 @@
+/js/
+/js-dist/app/modules/
+/js-dist/app/components/
+/node_modules/
+/less/
+/gruntfile.js
+/index_src.html
+/js-dist/app/app.js
+/js-dist/app/settings.js
+/nbproject/

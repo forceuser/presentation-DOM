@@ -1,0 +1,32 @@
+<div class="text-center">
+    <div style="display: inline-block; max-width: 1200px; width: 100%; text-align: left;">
+        <h4 class="text-primary">Определение относительного положения в дереве</h4>
+        <ul class="sm-list">
+            <li>
+               <strong>node.contains(<span class="attrs">otherNode</span>)</strong> - проверяет является ли node потомком otherNode
+            </li>
+            <li>
+               <strong>node.compareDocumentPosition(<span class="attrs">otherNode</span>)</strong> - сравнивает положение в документе node относительно otherNode, возвращает битовую маску
+            </li>
+        </ul>
+        <hr />
+        <h4 class="text-primary">Значения битовой маски</h4>
+        <ul class="sm-list">
+           <li>
+               <strong>DOCUMENT_POSITION_DISCONNECTED = 1</strong> - node исключен из документа
+           </li>
+           <li>
+               <strong>DOCUMENT_POSITION_PRECEDING = 2</strong> - node предшествует otherNode
+           </li>
+           <li>
+               <strong>DOCUMENT_POSITION_FOLLOWING = 4</strong> - node следует после otherNode
+           </li>
+           <li>
+               <strong>DOCUMENT_POSITION_CONTAINS = 8</strong> - node содержит otherNode
+           </li>
+           <li>
+               <strong>DOCUMENT_POSITION_CONTAINED_BY = 16</strong> - otherNode содержит node
+           </li>
+        </ul>
+    </div>
+</div>

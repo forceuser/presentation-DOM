@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <title>Презентация, мастер класс по HTML DOM</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, target-densitydpi=160, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, minimal-ui" />
+        <meta name="HandheldFriendly" content="true" />
+        <base href="/presentation-DOM/" />
+        <link rel="stylesheet" type="text/css" href="css/app/index.css">
+    </head>
+    <body>
+        <div class="wrapper" data-ui-view="body">
+        </div>
+
+
+        <!--подключаем и настраеваем requirejs-->
+        <script src="js-dist/lib/requirejs/require.js"></script>
+        <script>
+            baseUrl = document.head.querySelector('base').href;
+            (function(){
+
+                require.config({
+                    baseUrl: "js-dist",
+                    waitSeconds: 200,
+                    config: {
+                        i18n: {
+                            locale: document.documentElement.lang
+                        }
+                    }
+                });
+
+                define("app/settings", function () { //настройки
+                    return {
+                        baseUrl: baseUrl,
+                        appName: "presentationDOM",
+                        appTitle: document.title,
+                        html5Mode: false,
+                        slideCount: 16
+                    };
+                });
+
+                require(["app/config"], function(){// грузим настройки requirejs
+                    require(["app/index"]);
+                });
+            })();
+        </script>
+    </body>
+</html>

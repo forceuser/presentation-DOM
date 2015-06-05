@@ -1,0 +1,16 @@
+{
+  "name": "presentationDOM",
+  "main": "app://app/index.html",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Electronic Recruiting",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-cli": "^0.1.13",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-copy": "^0.8.0",
+    "grunt-contrib-less": "^1.0.1",
+    "grunt-contrib-requirejs": "^0.4.4",
+    "grunt-contrib-uglify": "^0.9.1"
+  }
+}

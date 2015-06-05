@@ -1,0 +1,41 @@
+<div class="text-center">
+    <div style="display: inline-block; max-width: 1200px; width: 100%; text-align: left;">
+        <h4 class="text-primary">Манипуляция с узлами DOM</h4>
+        <ul class="sm-list">
+           <li>
+               <strong>parent.appendChild(<span class="attrs">child</span>)</strong> - добавление дочернего узла к текущему
+           </li>
+           <li>
+               <strong>parent.removeChild(<span class="attrs">child</span>)</strong> - удаление дочернего узла
+           </li>
+           <li>
+               <strong>parent.replaceChild(<span class="attrs">child, oldChild</span>)</strong> - заменяет дочерний элемент oldChild на child, возвращает oldChild
+           </li>
+           <li>
+               <strong>parent.insertBefore(<span class="attrs">child, referenceElement</span>)</strong> - добавляет дочерний элемент child перед дочерним элементом referenceElement
+           </li>
+           <li>
+               <strong>parent.insetAdjacentHTML(<span class="attrs">position, text</span>)</strong> - добавляет HTML содержимое в указанное место position ('beforebegin','afterbegin','beforeend','afterend')
+           </li>
+        </ul>
+        <hr />
+        <h4 class="text-primary">Атрибуты DOM элементов</h4>
+        <ul class="sm-list">
+           <li>
+               <strong>element.attributes[]</strong> - ссылка на коллекцию атрибутов элемента
+           </li>
+           <li>
+               <strong>element.addAttribute(<span class="attrs">name, value</span>)</strong> - добавляет атрибут name и устанавливает ему значение value
+           </li>
+           <li>
+               <strong>element.getAttribute(<span class="attrs">name</span>)</strong> - получает значение атрибута с указанным именем
+           </li>
+           <li>
+               <strong>element.removeAttribute(<span class="attrs">name</span>)</strong> - удаляет атрибут с указанным именем
+           </li>
+           <li>
+               <strong>element.hasAttribute(<span class="attrs">name</span>)</strong> - проверяет содержится ли указанный атрибут в коллекции
+           </li>
+        </ul>
+    </div>
+</div>

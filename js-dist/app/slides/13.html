@@ -1,0 +1,38 @@
+<div class="text-center">
+    <div style="display: inline-block; max-width: 1200px; width: 100%; text-align: left; font-size: 0.9em;">
+        <h4 class="text-primary">Обьекты, свойства, дескрипторы</h4>
+        <ul class="sm-list">
+           <li>
+               <strong>Object.create(proto[, propertiesObject])</strong> - создает который наследуется от указанного, необязательный параметр propertiesObject обьявляет свойтва обьекта в виде дескрипторов
+           </li>
+           <li>
+               <strong>Object.defineProperty(obj, prop, descriptor)</strong> - устанавливает дескриптор descriptor свойтва prop обьекта obj
+           </li>
+           <li>
+               <strong>Object.defineProperties(obj, props)</strong> - для обьекта obj устанавливает дескрипторы для свойств указанных в обьекте props (ключ - имя свойства, значение- дескриптор)
+           </li>
+        </ul>
+        <h4 class="text-primary">Дескрипторы</h4>
+        <ul class="sm-list">
+           <li>
+               <strong>configurable</strong> - если false то свойство не может быть удалено и не может быть модифицырован дескриптор
+           </li>
+           <li>
+               <strong>enumerable</strong> - если true то свойство доступно для перечисления (например через цикл for..in)
+           </li>
+           <li>
+               <strong>value</strong> - устанавливает значение свойства
+           </li>
+           <li>
+               <strong>writable</strong> - если свойство доступно для записи при помощи оператора присваивания
+           </li>
+           <li>
+               <strong>get</strong> - геттер, функция возвращаемое значение которой будет использоватся как значение свойства
+           </li>
+           <li>
+               <strong>set</strong> - сеттер (function(value){}), функция вызывается при присвоении свойству нового значения<br />
+               геттер и сеттер не могут быть использованы одновременно с десрипторами value и writable
+           </li>
+        </ul>
+    </div>
+</div>
