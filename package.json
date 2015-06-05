@@ -1,9 +1,9 @@
 {
-  "name": "presentationDOM",
+  "name": "presentation-DOM",
   "main": "app://app/index.html",
   "private": true,
   "version": "0.0.1",
-  "description": "Electronic Recruiting",
+  "description": "Презентация, мастер класс по HTML DOM",
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-cli": "^0.1.13",
