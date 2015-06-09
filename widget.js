@@ -41,7 +41,7 @@
     }
 
     SomeConstructor.prototype = {
-        initialize: function(){
+        initialize: function(options){
             this.options = {};
             this.options.someOption = (options||{}).someOption;
         },
