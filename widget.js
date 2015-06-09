@@ -19,10 +19,11 @@
 
     // Создадим новый конструктор на расширыв предыдущий
 
-    function ChildConstructor(options,parentObject){
+    function ChildConstructor(options,otherParameter){
         this.options = {};
         this.options.someOption2 = (options||{}).someOption2;
         this.options.someOption = (options||{}).someOption;// опять писать то же самое?
+        this._otherParameter = otherParameter;
     }
 
     ChildConstructor.prototype = Object.create(SomeConstructor.prototype);
@@ -55,15 +56,16 @@
 
     // Создадим новый конструктор на расширыв предыдущий
 
-    function ChildConstructor(options,parentObject){
-        this.initialize&&this.initialize(options,parentObject);
+    function ChildConstructor(options,otherParameter){
+        this.initialize&&this.initialize(options,otherParameter);
     }
 
     ChildConstructor.prototype = Object.create(SomeConstructor.prototype);
     ChildConstructor.prototype.constructor = ChildConstructor; // восстанавливаем исходное свойство constructor
-    ChildConstructor.prototype.initialize = function(){
+    ChildConstructor.prototype.initialize = function(options,otherParameter){
         SomeConstructor.prototype.initialize.apply(this,arguments); // Выполняем унаследованный метод initialize
         this.options.someOption2 = (options||{}).someOption2;
+        this._otherParameter = otherParameter;
     }
     ChildConstructor.prototype.doSomethingElse = function(){ // Добавляем еще одид метод
 
