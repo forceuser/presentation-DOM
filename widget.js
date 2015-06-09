@@ -34,10 +34,10 @@
 })();
 
 
+// Попробуем немного оптимизировать код, создадим метод initialize который будет вызыватся из конструктора
 (function(){
-    function SomeConstructor(options){//обычно мы хотим передать параметры инициализации в конструктор
+    function SomeConstructor(options){
         this.initialize&&this.initialize(options);
-
     }
 
     SomeConstructor.prototype = {
@@ -50,11 +50,10 @@
         }
     };
     SomeConstructor.prototype.constructor = SomeConstructor; // восстанавливаем исходное свойство constructor
-
     var someObj = new SomeConstructor();
 
 
-    // Создадим новый конструктор на расширыв предыдущий
+    // Создадим новый конструктор расширыв предыдущий
 
     function ChildConstructor(options,otherParameter){
         this.initialize&&this.initialize(options,otherParameter);
@@ -72,6 +71,7 @@
     };
 
     // Так уже лучше но все еще много повторяемого кода
+    // Каждый раз переписывать тело конструктора
 })();
 
 
@@ -122,6 +122,7 @@ function universalConstructor() {
 }
 
 // Функция mixin копирует все свойства (геттеры, сеттеры и неперечислимые свойства) из исходных обьектов source в обьект dest
+// Эта функция аналог метода Object.assign() из ECMAScript6 (на данный момент реализован только в Firefox >=34)
 function mixin(dest /*, source1..sourceN*/) {
     var source;
     // Перебираем все аргументы кроме первого
@@ -451,7 +452,7 @@ var CalendarWidget = (function(CalendarWidget){
             this._date = new Date(value);
             this._date = dateUtils.getMonthFirstDay(this._date);
             if(!lastDate||(lastDate.getTime() !== this._date.getTime())){
-                this.emit("changeDate",this._date);
+                this.emit("changeDate",this._date);// генерируем событие изменения даты
                 this.render();
             }
         },
