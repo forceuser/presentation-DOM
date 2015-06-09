@@ -1,5 +1,75 @@
 
 // Функция-конструктор в js является подобием класса в классическом ООП
+(function(){
+    function SomeConstructor(options){//обычно мы хотим передать параметры инициализации в конструктор
+        console.log("constructor context",this);// контекстом конструктора this является создаваемый объект
+        this.options.someOption = (options||{}).someOption;
+    }
+
+    SomeConstructor.prototype = {
+        doSomething: function(){
+            console.log("something",this.options);
+        }
+    };
+    SomeConstructor.prototype.constructor = SomeConstructor; // восстанавливаем исходное свойство constructor
+
+    var someObj = new SomeConstructor();
+
+
+    // Создадим новый конструктор на расширыв предыдущий
+
+    function ChildConstructor(options,parentObject){
+        this.options.someOption2 = (options||{}).someOption2;
+        this.options.someOption = (options||{}).someOption;// опять писать то же самое?
+    }
+
+    ChildConstructor.prototype = Object.create(SomeConstructor.prototype);
+    ChildConstructor.prototype.constructor = ChildConstructor; // восстанавливаем исходное свойство constructor
+    ChildConstructor.prototype.doSomethingElse = function(){ // Добавляем еще одид метод
+
+    };
+})();
+
+
+(function(){
+    function SomeConstructor(options){//обычно мы хотим передать параметры инициализации в конструктор
+        this.initialize&&this.initialize(options);
+
+    }
+
+    SomeConstructor.prototype = {
+        initialize: function(){
+            this.options.someOption = (options||{}).someOption;
+        },
+        doSomething: function(){
+            console.log("something",this.options);
+        }
+    };
+    SomeConstructor.prototype.constructor = SomeConstructor; // восстанавливаем исходное свойство constructor
+
+    var someObj = new SomeConstructor();
+
+
+    // Создадим новый конструктор на расширыв предыдущий
+
+    function ChildConstructor(options,parentObject){
+        this.initialize&&this.initialize(options,parentObject);
+    }
+
+    ChildConstructor.prototype = Object.create(SomeConstructor.prototype);
+    ChildConstructor.prototype.constructor = ChildConstructor; // восстанавливаем исходное свойство constructor
+    ChildConstructor.prototype.initialize = function(){
+        SomeConstructor.prototype.initialize.apply(this,arguments);
+        this.options.someOption2 = (options||{}).someOption2;
+    }
+    ChildConstructor.prototype.doSomethingElse = function(){ // Добавляем еще одид метод
+
+    };
+
+    // Так уже лучше но все еще много повторяемого кода
+})();
+
+
 
 // Напишем универсальный конструктор,
 // все дальнейшие конструкторы будут генерироватся на основе его исходного кода
@@ -154,7 +224,7 @@ var ArrayExt = declare("ArrayExt",Array);
 
 // Тепепь на основе этих базовых конструкторов можно создавать контрукторы используя extend
 
-// Сделаем конструктор для виджета
+// Сделаем конструктор для базового виджета
 var Widget = (function(Widget){
     Widget = ObjectExt.extend("Widget",{
         initialize: function(){
@@ -239,48 +309,56 @@ var formatUtils = {
     }
 };
 
+// Напишен утилитарные функции для работы с датой
 var dateUtils = {
-    getMonthFirstDay: function(date){
+    getMonthFirstDay: function(date){//Вычисление первого дня месяца из указанной даты
         date = new Date(date);
         date.setDate(1);
         date.setHours(0, 0, 0, 0);
         return date;
     },
-    getMonthLastDay: function(date){
+    getMonthLastDay: function(date){//Вычисление последнего дня месяца из указанной даты
         date = new Date(date);
         date.setHours(0, 0, 0, 0);
         date.setMonth(date.getMonth() + 1);
         date.setDate(date.getDate() - 1);
         return date;
     },
-    getWeekFirstDay: function(date,weekFirstDay){
+    getWeekFirstDay: function(date,weekFirstDay){//Вычисление первого дня недели из указанной даты и в завистимости
+                                                   // от того какой день недели считается первым
         weekFirstDay = weekFirstDay||0;
         date = new Date(date);
+        date.setHours(0, 0, 0, 0);
         var day = date.getDay() - weekFirstDay;
         date.setDate(date.getDate() - (day < 0 ? 7 + day : day));
         return date;
     },
-    getWeekLastDay: function(date,weekFirstDay){
+    getWeekLastDay: function(date,weekFirstDay){//Вычисление поесденего дня недели из указанной даты и в завистимости
+                                                   // от того какой день недели считается первым
         weekFirstDay = weekFirstDay||0;
         date = new Date(date);
+        date.setHours(0, 0, 0, 0);
         var day = date.getDay() - weekFirstDay;
         date.setDate(date.getDate() + (6 - (day < 0 ? 7 + day : day)));
         return date;
     },
-    getCalendarFirstDay: function(date,weekFirstDay){
+    getCalendarFirstDay: function(date,weekFirstDay){//Вычисление первого дня для отображения в календаре из указанной даты и в завистимости
+                                                   // от того какой день недели считается первым
         return this.getWeekFirstDay(this.getMonthFirstDay(date),weekFirstDay);
     },
-    getCalendarLastDay: function(date,weekFirstDay){
+    getCalendarLastDay: function(date,weekFirstDay){//Вычисление поеследнего дня для отображения в календаре из указанной даты и в завистимости
+                                                   // от того какой день недели считается первым
         return this.getWeekLastDay(this.getMonthLastDay(date),weekFirstDay);
     }
 };
 
-
+// Напишем базовый конструктор виджета календаря
 var CalendarWidget = (function(CalendarWidget){
     CalendarWidget = Widget.extend("CalendarWidget",[EventMixin,{
         options: {
             weekFirstDay: 1, // Неделя начинается с понедельника
-            dayNames: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'] // локализированные названия месяцев
+            dayNames: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'], // локализированные названия месяцев
+            loadingText: "Загрузка.."
         },
         initialize: function(options){
             // Вызываем родительский метод initialize
@@ -289,18 +367,68 @@ var CalendarWidget = (function(CalendarWidget){
             CalendarWidget._mixins[0].initialize.apply(this,arguments);
             // Устанавливаем опции с учетом опций по-умолчанию
             this.options = mixin({},this.options,options);
+            this.domNode.classList.add("calendar");
 
             // Устанавливаем дату в таймауте для того чтобы успеть добавить обработчик события из основного кода
             setTimeout(function(){
                 this.setDate(this.options.date);
             }.bind(this));
         },
-        createCell: function(){
+        createLoadingIndicator: function(){
+            var indicator = document.createElement("div");
+            indicator.className = "loading-indicator";
+            indicator.textContent = this.options.loadingText;
+            return indicator;
+        },
+        createCell: function(date){
+            var cellMonth = dateUtils.getMonthFirstDay(date);
 
+            var cell = document.createElement("td");
+            cell.className = 'cell';
+            var container = document.createElement("div");
+            container.className = "cell-container";
+            var content = document.createElement("div");
+            content.className = "cell-content";
+            content.textContent = date.getDate();
+
+            cell.appendChild(content);
+            cell.appendChild(container);
+            if(cellMonth.getTime()<this.date.getTime()){
+                cell.classList.add("prev-month");
+            }else if(cellMonth.getTime()<this.date.getTime()){
+                cell.classList.add("next-month");
+            }
+            cell.setAttribute("year",date.getFullYear());
+            cell.setAttribute("month",date.getMonth());
+            cell.setAttribute("day",date.getDate());
+
+            return cell;
+        },
+        showLoadingIndicator: function(){
+            this.domNode.appendChild(this.createLoadingIndicator());
         },
         render: function(){
             if(!this._renderPrevented){
+                this.clear();
 
+                var cur = dateUtils.getCalendarFirstDay(this.date,this.options.weekFirstDay);
+                var last = dateUtils.getCalendarLastDay(this.date,this.options.weekFirstDay);
+
+                var table = document.createElement("table");
+                table.className = "calendar-table";
+                var tbody = document.createElement("tbody");
+                table.appendChild(tbody);
+                var row;
+                while(cur.getTime()<=last.getTime()){
+                    if(cur.getDay()===this.options.weekFirstDay){
+                        row = document.createElement("tr");
+                        row.className = "week-row";
+                        tbody.appendChild(row);
+                    }
+                    row.appendChild(this.createCell(cur));
+                    cur.setDate(cur.getDate()+1);
+                }
+                this.domNode.appendChild(table);
             }
         },
         preventRendering: function(){
@@ -312,23 +440,32 @@ var CalendarWidget = (function(CalendarWidget){
         setDate: function(value){
             var lastDate = this._date;
             this._date = new Date(value);
+            this._date = dateUtils.getMonthFirstDay(this._date);
             if(!lastDate||(lastDate.getTime() !== this._date.getTime())){
                 this.emit("changeDate",this._date);
                 this.render();
             }
         },
-        get date(){
+        get date(){// геттер для даты, будет выполнятся при чтении из свойства .date
             return this._date;
         },
-        set date(value){
+        set date(value){// сеттер для даты, будет выполнятся при записи в свойство .date
             this.setDate(value);
         }
     }]);
     return CalendarWidget;
 })();
 
+
+// Напишем конструктор расширенного виджета календаря
+// который будет отображать праздники и выходные дни
 var AdvancedCalendarWidget = (function(AdvancedCalendarWidget){
     AdvancedCalendarWidget = CalendarWidget.extend("AdvancedCalendarWidget",{
+        markClasses: {
+            HOLIDAY: 'holiday',
+            DAY_OFF: 'day-off',
+            SHORT: 'short-day'
+        },
         setMarks: function(marks){
             this._marks = marks;
             this.render();
@@ -347,8 +484,8 @@ var AdvancedCalendarWidget = (function(AdvancedCalendarWidget){
             if(mark){
                 var markEl = document.createElement("div");
                 markEl.classList.add("cell-background");
-                markEl.classList.add(mark);
-                cell.querySelector(".cell-container").appendChild(markEl);
+                cell.classList.add(this.markClasses[mark]||"");
+                cell.appendChild(markEl);
             }
             return cell;
         }
@@ -361,8 +498,11 @@ var calendar = AdvancedCalendarWidget({
     date: new Date(2015,4,1)
 });
 
+// Повесим обработчик события на изменение даты в виджете
 calendar.on("changeDate",function(date){
     this.preventRendering();
+    this.clear();
+    this.showLoadingIndicator();
     // Например грузим пометки ajax запросом
     // Но для простоты сделаю эмуляцию через таймаут
     setTimeout(function(){
@@ -389,14 +529,4 @@ calendar.on("changeDate",function(date){
 });
 
 console.log("calendar",calendar);
-calendar.appendTo(document.body);
-
-
-
-
-// var calendar = MarkedCalendar({
-//     date: new Date(2015, 7, 1)
-// });
-
-// console.log("calendar", calendar);
-// calendar.appendTo(document.body);
+calendar.appendTo(document.querySelector("body > .container"));
