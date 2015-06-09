@@ -3,6 +3,7 @@
 (function(){
     function SomeConstructor(options){//обычно мы хотим передать параметры инициализации в конструктор
         console.log("constructor context",this);// контекстом конструктора this является создаваемый объект
+        this.options = {};
         this.options.someOption = (options||{}).someOption;
     }
 
@@ -19,6 +20,7 @@
     // Создадим новый конструктор на расширыв предыдущий
 
     function ChildConstructor(options,parentObject){
+        this.options = {};
         this.options.someOption2 = (options||{}).someOption2;
         this.options.someOption = (options||{}).someOption;// опять писать то же самое?
     }
@@ -39,6 +41,7 @@
 
     SomeConstructor.prototype = {
         initialize: function(){
+            this.options = {};
             this.options.someOption = (options||{}).someOption;
         },
         doSomething: function(){
@@ -59,7 +62,7 @@
     ChildConstructor.prototype = Object.create(SomeConstructor.prototype);
     ChildConstructor.prototype.constructor = ChildConstructor; // восстанавливаем исходное свойство constructor
     ChildConstructor.prototype.initialize = function(){
-        SomeConstructor.prototype.initialize.apply(this,arguments);
+        SomeConstructor.prototype.initialize.apply(this,arguments); // Выполняем унаследованный метод initialize
         this.options.someOption2 = (options||{}).someOption2;
     }
     ChildConstructor.prototype.doSomethingElse = function(){ // Добавляем еще одид метод
@@ -75,12 +78,16 @@
 // все дальнейшие конструкторы будут генерироватся на основе его исходного кода
 function universalConstructor() {
     // Сделаем возможность запускать конструктор не только как js коструктор
-    // (используя ключевое слово new) например new universalConstructor();
+    // (т.е. не только используя ключевое слово new) например new universalConstructor();
     // но и как обычную функцию universalConstructor();
+    // Что позволит использовать при создании обьектов метод apply, заранее не зная количесво параметров иницализации
+    // Например так: var obj = universalConstructor.apply(this,arguments);
 
-    // Для этого проверяем является ли текущий контекст экземпляром universalConstructor
-    // Если конструктор был запущен без new то его контекстом будет текущий контекст запуска фунции, т.е. обычно это будет window
-    // Иначе его контекстом будет созданный обьект который является экземляром(instanceof) universalConstructor
+
+    // Для этого проверяем является ли текущий контекст(this) экземпляром universalConstructor
+    // Если конструктор был запущен без new то его контекстом будет текущий контекст запуска фунции,
+    // т.е. обычно это будет глобальный обьект window
+    // Иначе его контекстом будет созданный обьект который является экземляром(instanceof) конструктора universalConstructor
     if (this instanceof universalConstructor) {
         //Выполняем метод initialize с переданными аргументами
         return this.initialize && this.initialize.apply(this, arguments);
